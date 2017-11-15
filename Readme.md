@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анна Пономарёва](https://up.htmlacademy.ru/javascript/11/user/153610).
-* Наставник: `Неизвестно`.
+* Наставник: `Алексей Рябинин`.
 
 ---
 
