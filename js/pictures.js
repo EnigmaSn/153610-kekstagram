@@ -1,10 +1,11 @@
 'use strict';
-
 // получить случайное число
 var getRandom = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 };
-
+// обозначение клавиш
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 // массив комментариев
 var userComments = [
   'Всё отлично!',
@@ -14,14 +15,11 @@ var userComments = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-
 // масив случайных комментариев
-// Комментарий должен генерироваться случайным образом. Для комментария нужно взять одно или два случайных предложений из предложенных выше
 var randomComments = [
-  [userComments[getRandom(0, userComments.length - 1)]],
-  [userComments[getRandom(0, userComments.length - 1)], userComments[getRandom(0, userComments.length - 1)]]
+  [userComments[getRandom(0, userComments.length)]],
+  [userComments[getRandom(0, userComments.length)], userComments[getRandom(0, userComments.length)]]
 ];
-
 // массив фотографий пользователей, вкл лайки, комментарии и фото
 var getPhotos = function (value) {
   var photos = [];
@@ -29,15 +27,15 @@ var getPhotos = function (value) {
     photos.push({
       url: 'photos/' + (i + 1) + '.jpg',
       likes: getRandom(15, 200),
-      comments: randomComments[getRandom(0, randomComments.length - 1)]
+      comments: randomComments[getRandom(0, randomComments.length)]
     });
   }
   return photos;
 };
 var userPhotos = getPhotos(25);
-
 // шаблон
-var similarPictureTemplate = document.querySelector('#picture-template').content;
+var similarPictureTemplate = document.querySelector('#picture-template').content.querySelector('.picture');
+
 // элемент
 var similarPictureElement = document.querySelector('.pictures');
 // заполнение шаблона
@@ -48,24 +46,56 @@ var getPicture = function (picture) {
   newPicture.querySelector('.picture-comments').textContent = picture.comments.length;
   return newPicture;
 };
-
 // заполнение блока
 var renderPictures = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < userPhotos.length; i++) {
-    fragment.appendChild(getPicture(userPhotos[i]));
+    var pictureOne = getPicture(userPhotos[i]);
+    pictureOne.addEventListener('click', pictureClickHandler(i));
+    fragment.appendChild(pictureOne);
   }
   similarPictureElement.appendChild(fragment);
 };
+
+var pictureClickHandler = function (i) {
+  var overlayOpenHandler = function (evt) {
+    evt.preventDefault();
+    galleryOverlay.classList.remove('hidden');
+    document.addEventListener('keydown', overlayEscHandler);
+    fillGalleryOverlay(userPhotos[i]);
+  };
+  return overlayOpenHandler;
+};
+
 renderPictures();
 
-// показать элемент
+// окно с картинкой
 var galleryOverlay = document.querySelector('.gallery-overlay');
-galleryOverlay.classList.remove('hidden');
-// заполнить элемент данными
-var fillgalleryOverlay = function (count) {
-  galleryOverlay.querySelector('.gallery-overlay-image').src = userPhotos[count].url;
-  galleryOverlay.querySelector('.likes-count').textContent = userPhotos[count].likes;
-  galleryOverlay.querySelector('.comments-count').textContent = userPhotos[count].comments.length;
+// заполнить окно данными
+var fillGalleryOverlay = function (photo) {
+  galleryOverlay.querySelector('.gallery-overlay-image').src = photo.url;
+  galleryOverlay.querySelector('.likes-count').textContent = photo.likes;
+  galleryOverlay.querySelector('.comments-count').textContent = photo.comments.length;
 };
-fillgalleryOverlay(0);
+
+// общая функция закрыть окно
+var overlayCloseHandler = function () {
+  galleryOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', overlayEscHandler);
+};
+// закрыть окно Esc
+var overlayEscHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    overlayCloseHandler();
+  }
+};
+// закрыть окно кликом
+var closeGallery = galleryOverlay.querySelector('.gallery-overlay-close');
+closeGallery.addEventListener('click', overlayCloseHandler);
+// закрыть окно клавишей enter на крестике
+closeGallery.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    overlayCloseHandler();
+  }
+});
+
