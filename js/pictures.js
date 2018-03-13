@@ -69,3 +69,4 @@ var fillgalleryOverlay = function (count) {
   galleryOverlay.querySelector('.comments-count').textContent = userPhotos[count].comments.length;
 };
 fillgalleryOverlay(0);
+
