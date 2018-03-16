@@ -81,6 +81,7 @@ var fillGalleryOverlay = function (photo) {
 // общая функция закрыть окно
 var overlayCloseHandler = function () {
   galleryOverlay.classList.add('hidden');
+  uploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', overlayEscHandler);
 };
 
@@ -100,4 +101,57 @@ closeGallery.addEventListener('keydown', function (evt) {
   }
 });
 
+// форма загрузки
+var imageForm = document.querySelector('#upload-select-image');
+// поле загрузки файла
+var uploadFile = imageForm.querySelector('#upload-file');
+// форма кадрирования изображения
+var uploadOverlay = imageForm.querySelector('.upload-overlay');
 
+// открытие формы кадрирования
+uploadFile.addEventListener('change', function () {
+  uploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', overlayEscHandler);
+});
+
+// закрытие формы кадрирования
+var uploadFormCancel = uploadOverlay.querySelector('.upload-form-cancel');
+uploadFormCancel.addEventListener('click', function () {
+  uploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', overlayEscHandler);
+});
+
+// отмена Esc при фокусе на комментарии
+var comment = uploadOverlay.querySelector('.upload-form-description');
+comment.addEventListener('focus', function () {
+  document.removeEventListener('keydown', overlayEscHandler);
+});
+comment.addEventListener('blur', function () {
+  document.addEventListener('keydown', overlayEscHandler);
+});
+
+// закрытие по ENTER при фокусе на крестике
+uploadFormCancel.addEventListener('focus', function () {
+  uploadFormCancel.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      overlayCloseHandler();
+    }
+  });
+});
+
+comment.required = false;
+comment.maxLength = 140;
+
+// Форма ввода масштаба
+// ??
+var resizeControls = uploadOverlay.querySelector('.upload-resize-controls-value');
+resizeControls.step = 25;
+resizeControls.minLength = 25;
+resizeControls.maxLength = 100;
+
+// Применение эффекта к изображению (через делегирование)
+var effectContainer = uploadOverlay.querySelector('.upload-effect-controls');
+var effectImagePreview = uploadOverlay.querySelector('.effect-image-preview');
+effectContainer.addEventListener('change', function (evt) {
+  // доделать
+});
