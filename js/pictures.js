@@ -152,6 +152,8 @@ resizeControls.maxLength = 100;
 // Применение эффекта к изображению (через делегирование)
 var effectContainer = uploadOverlay.querySelector('.upload-effect-controls');
 var effectImagePreview = uploadOverlay.querySelector('.effect-image-preview');
+
 effectContainer.addEventListener('change', function (evt) {
-  // доделать
+  var target = evt.target.value;
+  effectImagePreview.className = 'effect-image-preview effect-' + target;
 });
