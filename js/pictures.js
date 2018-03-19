@@ -146,7 +146,7 @@ comment.maxLength = 140;
 // ??
 var resizeControls = uploadOverlay.querySelector('.upload-resize-controls-value');
 resizeControls.step = 25;
-resizeControls.minLength = 25;
+resizeControls.min = 25;
 resizeControls.maxLength = 100;
 
 // Применение эффекта к изображению (через делегирование)
@@ -156,4 +156,22 @@ var effectImagePreview = uploadOverlay.querySelector('.effect-image-preview');
 effectContainer.addEventListener('change', function (evt) {
   var target = evt.target.value;
   effectImagePreview.className = 'effect-image-preview effect-' + target;
+});
+
+// изменение масштаба
+var resizeMin = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
+var resizeMax = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
+var resizeValue = uploadOverlay.querySelector('.upload-resize-controls-value');
+
+resizeMin.addEventListener('click', function () {
+  if (parseFloat(resizeValue.value) > +resizeValue.min) {
+    resizeValue.value = '' + (parseFloat(resizeValue.value) - +resizeValue.step) + '%';
+    effectImagePreview.style = 'transform: scale(' + parseFloat(resizeValue.value) / resizeValue.max + ')';
+  }
+});
+resizeMax.addEventListener('click', function () {
+  if (parseFloat(resizeValue.value) < +resizeValue.max) {
+    resizeValue.value = '' + (parseFloat(resizeValue.value) + +resizeValue.step) + '%';
+    effectImagePreview.style = 'transform: scale(' + parseFloat(resizeValue.value) / resizeValue.max + ')';
+  }
 });
