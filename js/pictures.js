@@ -175,3 +175,43 @@ resizeMax.addEventListener('click', function () {
     effectImagePreview.style = 'transform: scale(' + parseFloat(resizeValue.value) / resizeValue.max + ')';
   }
 });
+
+// Хэш-теги
+var hashTag = uploadOverlay.querySelector('.upload-form-hashtags');
+var hashTagSplit = hashTag.value.split(' '); // разделение тегов через пробел
+var hashTagLength = hashTagSplit.length;
+hashTag.required = false;
+
+var hashTagValid = function () {
+  // через условия
+  // true = error
+  if (hashTag.value.length === 0) {
+    return false; // хэш-теги не обязательны
+  }
+  if (hashTagLength > 5) {
+    return true; // нельзя указать больше пяти хэш-тегов
+  }
+  for (var i = 0; i < hashTagLength; i++) {
+    if (hashTagSplit[i][0] !== '#') {
+      return true; // хэш-тег начинается с символа `#` (решётка) и состоит из одного слова
+    }
+    if (hashTagSplit[i].length > 20) {
+      return true; // максимальная длина одного хэш-тега 20 символов
+    }
+    for (var j = 0; j < hashTagLength[i]; j++) {
+      // теги не чувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом
+      if (hashTagSplit[i].toLowerCase() === hashTagSplit[j].toLowerCase() && i !== j) {
+        return true; // доделать
+      }
+    }
+  }
+  return false;
+};
+
+var submitFormHandler = function (evt) {
+  if (hashTagValid() === true) {
+    hashTag.style.borderColor = 'red';
+    evt.preventDefault();
+  }
+};
+imageForm.addEventListener('submit', submitFormHandler);
