@@ -201,12 +201,13 @@ var hashTagValid = function () {
     for (var j = 0; j < hashTagLength[i]; j++) {
       // теги не чувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом
       if (hashTagSplit[i].toLowerCase() === hashTagSplit[j].toLowerCase() && i !== j) {
-        return true; // доделать
+        return true;
       }
     }
   }
   return false;
 };
+// всегда выдает ошибку
 
 var submitFormHandler = function (evt) {
   if (hashTagValid() === true) {
