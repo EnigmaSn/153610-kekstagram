@@ -207,7 +207,6 @@ var hashTagValid = function () {
   }
   return false;
 };
-// всегда выдает ошибку
 
 var submitFormHandler = function (evt) {
   if (hashTagValid() === true) {
