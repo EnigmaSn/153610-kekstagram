@@ -178,11 +178,11 @@ resizeMax.addEventListener('click', function () {
 
 // Хэш-теги
 var hashTag = uploadOverlay.querySelector('.upload-form-hashtags');
-var hashTagSplit = hashTag.value.split(' '); // разделение тегов через пробел
-var hashTagLength = hashTagSplit.length;
 hashTag.required = false;
 
 var hashTagValid = function () {
+  var hashTagSplit = hashTag.value.split(' '); // разделение тегов через пробел
+  var hashTagLength = hashTagSplit.length;
   // через условия
   // true = error
   if (hashTag.value.length === 0) {
@@ -198,7 +198,7 @@ var hashTagValid = function () {
     if (hashTagSplit[i].length > 20) {
       return true; // максимальная длина одного хэш-тега 20 символов
     }
-    for (var j = 0; j < hashTagLength[i]; j++) {
+    for (var j = 0; j < hashTagLength; j++) {
       // теги не чувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом
       if (hashTagSplit[i].toLowerCase() === hashTagSplit[j].toLowerCase() && i !== j) {
         return true;
