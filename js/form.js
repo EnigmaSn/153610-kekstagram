@@ -90,4 +90,57 @@
     }
   };
   imageForm.addEventListener('submit', submitFormHandler);
+
+  // поле с бегунком
+  var radioLine = imageForm.querySelector('.upload-effect-level');
+  // кнопка бегунка
+  var radioButton = radioLine.querySelector('.upload-effect-level-pin');
+  var radioButtonLine = radioLine.querySelector('.upload-effect-level-val');
+  radioButton.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var start = {
+      x: evt.clientX
+    };
+    var mouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+      var xMin = 0;
+      var xMax = 455;
+      var shift = {
+        x: start.x - moveEvt.clientX
+      };
+
+      start = {
+        x: moveEvt.clientX
+      };
+      var presentX = radioButton.offsetLeft - shift.x;
+      if (presentX >= xMin && presentX <= xMax) {
+        radioButton.style.left = presentX + 'px';
+        radioButtonLine.style.width = presentX + 'px';
+      }
+      var getPreviewEffect = function () {
+        if (effectImagePreview.className === 'effect-image-preview effect-chrome') {
+          effectImagePreview.style = 'filter: grayscale(' + presentX / xMax + ');';
+        } else if (effectImagePreview.className === 'effect-image-preview effect-sepia') {
+          effectImagePreview.style = 'filter: sepia(' + presentX / xMax + ');';
+        } else if (effectImagePreview.className === 'effect-image-preview effect-marvin') {
+          effectImagePreview.style = 'filter: invert(' + presentX * 100 / xMax + '%);';
+        } else if (effectImagePreview.className === 'effect-image-preview effect-phobos') {
+          effectImagePreview.style = 'filter: blur(' + presentX * 3 / xMax + 'px);';
+        } else if (effectImagePreview.className === 'effect-image-preview effect-heat') {
+          effectImagePreview.style = 'filter: brightness(' + presentX * 3 / xMax + ');';
+        }
+      };
+      getPreviewEffect();
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+  });
 })();
